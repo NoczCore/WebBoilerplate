@@ -44,18 +44,6 @@ gulp.task('css', function(){
 		.pipe(gulp.dest(config.basePathCompile+'css/'));
 });
 
-gulp.task('cssManager', function(){
-	return gulp.src(config.srcPath+'manager/sass/app.scss')
-		.pipe(compass({
-			css:config.basePathCompile+'manager/css',
-			sass:config.srcPath+'manager/sass',
-			image:config.basePathCompile+'manager/img'
-		})).on('error', handleError)
-		.pipe(gulp.dest(config.basePathCompile+'manager/css/'))
-		.pipe(rename('app.min.css'))
-		.pipe(gulp.dest(config.basePathCompile+'manager/css/'));
-});
-
 /**
  * Compile with sass, generate maps and minify css (For production)
  **/
@@ -80,27 +68,6 @@ gulp.task('cssProd', function(){
 		.pipe(gulp.dest(config.basePathCompile+'css/'));
 });
 
-gulp.task('cssManagerProd', function(){
-	return gulp.src(config.srcPath+'manager/sass/app.scss')
-		.pipe(compass({
-			css:config.basePathCompile+'manager/css',
-			sass:config.srcPath+'manager/sass',
-			image:config.basePathCompile+'manager/img'
-		})).on('error', handleError)
-		.pipe(autoprefixer({
-			browsers: browsers,
-			cascade: false
-		})).on('error', handleError)
-		.pipe(csslint())
-		.pipe(csslint.reporter(fileReporter.reporter))
-		.pipe(gulp.dest(config.basePathCompile+'manager/css/'))
-		.pipe(rename('app.min.css'))
-		.pipe(minifyCSS()).on('error', handleError)
-		.pipe(csslint())
-		.pipe(csslint.reporter(fileReporter.reporter))
-		.pipe(gulp.dest(config.basePathCompile+'manager/css/'));
-});
-
 /**
  * Compile javascript (For development)
  **/
@@ -110,14 +77,6 @@ gulp.task('js', function(){
 		.pipe(gulp.dest(config.basePathCompile+'js/'))
 		.pipe(rename('app.min.js'))
 		.pipe(gulp.dest(config.basePathCompile+'js/'));
-});
-
-gulp.task('jsManager', function(){
-	return gulp.src(config.jsFilesManager)
-		.pipe(concat('app.js', {newLine: ';\n\n'})).on('error', handleError)
-		.pipe(gulp.dest(config.basePathCompile+'manager/js/'))
-		.pipe(rename('app.min.js'))
-		.pipe(gulp.dest(config.basePathCompile+'manager/js/'));
 });
 
 /**
@@ -137,20 +96,6 @@ gulp.task('jsProd', function(){
 		.pipe(gulp.dest(config.basePathCompile+'js/'));
 });
 
-gulp.task('jsManagerProd', function(){
-	gulp.src(config.jsFilesManager)
-		.pipe(sourcemaps.init())
-		.pipe(concat('app.js', {newLine: ';'})).on('error', handleError)
-		.pipe(sourcemaps.write('maps'))
-		.pipe(gulp.dest(config.basePathCompile+'manager/js/'));
-	return gulp.src(config.jsFilesManager)
-		.pipe(sourcemaps.init())
-		.pipe(concat('app.min.js', {newLine: ';'})).on('error', handleError)
-		.pipe(uglify())
-		.pipe(sourcemaps.write('maps'))
-		.pipe(gulp.dest(config.basePathCompile+'manager/js/'));
-});
-
 /**
  * Minify images
  **/
@@ -162,25 +107,12 @@ gulp.task('images', function(){
 		.pipe(gulp.dest(config.basePathCompile+'img/'));
 });
 
-gulp.task('imagesManager', function(){
-	gulp.src(config.basePathCompile+'manager/img/', {read:false})
-		.pipe(clean({force:true}));
-	return gulp.src(config.srcPath+'manager/img/**/*')
-		.pipe(config.imagemin(config.imageminConf))
-		.pipe(gulp.dest(config.basePathCompile+'manager/img/'));
-});
-
 /**
  * Fonts
  **/
 gulp.task('fonts', function(){
 	return gulp.src(config.srcPath+'fonts/**/*')
 		.pipe(gulp.dest(config.basePathCompile+'fonts'));
-});
-
-gulp.task('fontsManager', function(){
-	return gulp.src(config.srcPath+'manager/fonts/**/*')
-		.pipe(gulp.dest(config.basePathCompile+'manager/fonts'));
 });
 
 /**
@@ -194,7 +126,7 @@ gulp.task('clean', function(){
 /**
  * Production task
  **/
-gulp.task('prod', ['images', 'imagesManager', 'jsProd', 'jsManagerProd', 'cssProd', 'cssManagerProd', 'fonts', 'fontsManager'], function(){
+gulp.task('prod', ['images', 'jsProd', 'cssProd', 'fonts'], function(){
 	return;
 });
 
@@ -206,8 +138,4 @@ gulp.task('watch', function(){
 	gulp.watch(config.srcPath+'img/**/*.*', ['images']);
 	gulp.watch(config.srcPath+'js/**/*.js', ['js']);
 	gulp.watch(config.srcPath+'fonts/**/*.*', ['fonts']);
-	gulp.watch(config.srcPath+'manager/fonts/**/*.*', ['fontsManager']);
-	gulp.watch(config.srcPath+'manager/sass/**/*.scss', ['cssManager']);
-	gulp.watch(config.srcPath+'manager/img/**/*.*', ['imagesManager']);
-	gulp.watch(config.srcPath+'manager/js/**/*.js', ['jsManager']);
 });

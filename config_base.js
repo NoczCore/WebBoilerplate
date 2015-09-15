@@ -8,9 +8,6 @@ exports.srcPath = 'src/',
 exports.jsFiles = [
     exports.srcPath+'js/app.js'
 ],
-exports.jsFilesManager = [
-    exports.srcPath+'manager/js/app.js'
-],
 
 exports.imagemin = require('gulp-imagemin'),
 exports.pngquant = require('imagemin-pngquant'),
