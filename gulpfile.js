@@ -33,39 +33,43 @@ function handleError(err){
  * compile CSS with sass (For development)
  **/
 gulp.task('css', function(){
-	return gulp.src(config.srcPath+'sass/app.scss')
-		.pipe(compass({
-			css:config.basePathCompile+'css',
-			sass:config.srcPath+'sass',
-			image:config.basePathCompile+'img'
-		})).on('error', handleError)
-		.pipe(gulp.dest(config.basePathCompile+'css/'))
-		.pipe(rename('app.min.css'))
-		.pipe(gulp.dest(config.basePathCompile+'css/'));
+	for(i = 0; i < config.sassFiles.length; i++){
+		gulp.src(config.sassFiles[i])
+			.pipe(compass({
+				css:config.basePathCompile+'css',
+				sass:config.srcPath+'sass',
+				image:config.basePathCompile+'img'
+			})).on('error', handleError)
+			.pipe(gulp.dest(config.basePathCompile+'css/'))
+			.pipe(rename(config.sassFiles[i].split('\\').pop().split('/').pop().split('.')[0]+'.min.css'))
+			.pipe(gulp.dest(config.basePathCompile+'css/'));
+	}
 });
 
 /**
  * Compile with sass, generate maps and minify css (For production)
  **/
 gulp.task('cssProd', function(){
-	return gulp.src(config.srcPath+'sass/app.scss')
-		.pipe(compass({
-			css:config.basePathCompile+'css',
-			sass:config.srcPath+'sass',
-			image:config.basePathCompile+'img'
-		})).on('error', handleError)
-		.pipe(autoprefixer({
-			browsers: browsers,
-			cascade: false
-		})).on('error', handleError)
-		.pipe(csslint())
-		.pipe(csslint.reporter(fileReporter.reporter))
-		.pipe(gulp.dest(config.basePathCompile+'css/'))
-		.pipe(rename('app.min.css'))
-		.pipe(minifyCSS()).on('error', handleError)
-		.pipe(csslint())
-		.pipe(csslint.reporter(fileReporter.reporter))
-		.pipe(gulp.dest(config.basePathCompile+'css/'));
+	for(i = 0; i < config.sassFiles.length; i++) {
+		gulp.src(config.sassFiles[i])
+			.pipe(compass({
+				css: config.basePathCompile + 'css',
+				sass: config.srcPath + 'sass',
+				image: config.basePathCompile + 'img'
+			})).on('error', handleError)
+			.pipe(autoprefixer({
+				browsers: browsers,
+				cascade: false
+			})).on('error', handleError)
+			.pipe(csslint())
+			.pipe(csslint.reporter(fileReporter.reporter))
+			.pipe(gulp.dest(config.basePathCompile + 'css/'))
+			.pipe(rename(config.sassFiles[i].split('\\').pop().split('/').pop().split('.')[0]+'.min.css'))
+			.pipe(minifyCSS()).on('error', handleError)
+			.pipe(csslint())
+			.pipe(csslint.reporter(fileReporter.reporter))
+			.pipe(gulp.dest(config.basePathCompile + 'css/'));
+	}
 });
 
 /**

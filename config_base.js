@@ -9,6 +9,10 @@ exports.jsFiles = [
     exports.srcPath+'js/app.js'
 ],
 
+exports.sassFiles = [
+    exports.srcPath+'sass/app.scss'
+],
+
 exports.imagemin = require('gulp-imagemin'),
 exports.pngquant = require('imagemin-pngquant'),
 exports.imageminConf = {
