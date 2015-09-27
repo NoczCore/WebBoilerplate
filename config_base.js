@@ -3,7 +3,7 @@
  **/
 // Path [Ended with slash]
 exports.basePathCompile = '../assets/',
-exports.srcPath = 'src/',
+exports.srcPath = 'src_base/',
 
 exports.jsFiles = [
     exports.srcPath+'js/app.js'
