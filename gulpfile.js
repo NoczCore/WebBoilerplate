@@ -76,7 +76,7 @@ gulp.task('cssProd', function(){
  * Compile javascript (For development)
  **/
 gulp.task('js', function(){
-	return gulp.src(config.srcPath+config.jsFiles)
+	return gulp.src(config.jsFiles)
 		.pipe(concat('app.js', {newLine: ';\n\n'})).on('error', handleError)
 		.pipe(gulp.dest(config.basePathCompile+'js/'))
 		.pipe(rename('app.min.js'))
@@ -92,7 +92,7 @@ gulp.task('jsProd', function(){
 		.pipe(concat('app.js', {newLine: ';'})).on('error', handleError)
 		.pipe(sourcemaps.write('maps'))
 		.pipe(gulp.dest(config.basePathCompile+'js/'));
-	return gulp.src(config.srcPath+config.jsFiles)
+	return gulp.src(config.jsFiles)
 		.pipe(sourcemaps.init())
 		.pipe(concat('app.min.js', {newLine: ';'})).on('error', handleError)
 		.pipe(uglify())
