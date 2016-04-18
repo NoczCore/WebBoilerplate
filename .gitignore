@@ -3,5 +3,4 @@ node_modules/
 .sass-cache/
 index.html
 assets/
-node_modules/
-src/
+logs/

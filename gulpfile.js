@@ -14,12 +14,15 @@ var gulp = require('gulp'),
 	autoprefixer = require('gulp-autoprefixer'),
 	csslint = require('gulp-csslint'),
 	fileReporter = require('gulp-csslint-filereporter'),
-	browsers = ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1'],
 
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
 
-	config = require('./config.js');
+	mjml = require('gulp-mjml'),
+	mjmlEngine = require('mjml'),
+
+	config = require('./config.js'),
+	paths = config.paths;
 
 /**
  * FUNCTIONS
@@ -29,20 +32,40 @@ function handleError(err){
 	this.emit('end');
 }
 
+function getDest(file, basic){
+	var dest = paths.compile.base;
+	if(file.hasOwnProperty('dest')){
+		if(!path.isAbsolute(file.dest))
+			dest += basic;
+		dest += file.dest;
+	}else{
+		dest += basic;
+	}
+	return dest;
+}
+
 /**
  * compile CSS with sass (For development)
  **/
 gulp.task('css', function(){
-	for(i = 0; i < config.sassFiles.length; i++){
-		gulp.src(config.sassFiles[i])
-			.pipe(compass({
-				css:config.basePathCompile+'css',
-				sass:config.srcPath+'sass',
-				image:config.basePathCompile+'img'
-			})).on('error', handleError)
-			.pipe(gulp.dest(config.basePathCompile+'css/'))
-			.pipe(rename(config.sassFiles[i].split('\\').pop().split('/').pop().split('.')[0]+'.min.css'))
-			.pipe(gulp.dest(config.basePathCompile+'css/'));
+	for(var index in paths.sass) {
+		if (paths.sass.hasOwnProperty(index)) {
+			var file = paths.sass[index],
+				dest = getDest(file, paths.compile.css);
+
+
+			gulp.src(paths.src + file.sass)
+				.pipe(compass({
+					css: dest,
+					sass: paths.src + path.dirname(file.sass)+'/'
+				})).on('error', handleError)
+
+				.pipe(rename(path.basename((file.hasOwnProperty('name') ? file.name : file.sass)).replace('.scss', '') + '.css'))
+				.pipe(gulp.dest(dest))
+
+				.pipe(rename(path.basename((file.hasOwnProperty('name') ? file.name : file.sass)).replace('.scss', '') + '.min.css'))
+				.pipe(gulp.dest(dest));
+		}
 	}
 });
 
@@ -50,25 +73,34 @@ gulp.task('css', function(){
  * Compile with sass, generate maps and minify css (For production)
  **/
 gulp.task('cssProd', function(){
-	for(i = 0; i < config.sassFiles.length; i++) {
-		gulp.src(config.sassFiles[i])
-			.pipe(compass({
-				css: config.basePathCompile + 'css',
-				sass: config.srcPath + 'sass',
-				image: config.basePathCompile + 'img'
-			})).on('error', handleError)
-			.pipe(autoprefixer({
-				browsers: browsers,
-				cascade: false
-			})).on('error', handleError)
-			.pipe(csslint())
-			.pipe(csslint.reporter(fileReporter.reporter))
-			.pipe(gulp.dest(config.basePathCompile + 'css/'))
-			.pipe(rename(config.sassFiles[i].split('\\').pop().split('/').pop().split('.')[0]+'.min.css'))
-			.pipe(minifyCSS()).on('error', handleError)
-			.pipe(csslint())
-			.pipe(csslint.reporter(fileReporter.reporter))
-			.pipe(gulp.dest(config.basePathCompile + 'css/'));
+	for(var index in paths.sass) {
+		if (paths.sass.hasOwnProperty(index)) {
+			var file = paths.sass[index],
+				dest = getDest(file, paths.compile.css);
+
+			gulp.src(paths.src + file.sass)
+				.pipe(compass({
+					css: dest,
+					sass: paths.src + path.dirname(file.sass)+'/'
+				})).on('error', handleError)
+
+				.pipe(autoprefixer({
+					browsers: config.browsers,
+					cascade: false
+				})).on('error', handleError)
+
+				.pipe(csslint())
+				.pipe(csslint.reporter(fileReporter.reporter))
+				.pipe(rename(path.basename((file.hasOwnProperty('name') ? file.name : file.sass)).replace('.scss', '') + '.css'))
+				.pipe(gulp.dest(dest))
+
+				.pipe(rename(path.basename((file.hasOwnProperty('name') ? file.name : file.sass)).replace('.scss', '') + '.min.css'))
+				.pipe(minifyCSS()).on('error', handleError)
+
+				.pipe(csslint())
+				.pipe(csslint.reporter(fileReporter.reporter))
+				.pipe(gulp.dest(dest));
+		}
 	}
 });
 
@@ -76,54 +108,110 @@ gulp.task('cssProd', function(){
  * Compile javascript (For development)
  **/
 gulp.task('js', function(){
-	return gulp.src(config.jsFiles)
-		.pipe(concat('app.js', {newLine: ';\n\n'})).on('error', handleError)
-		.pipe(gulp.dest(config.basePathCompile+'js/'))
-		.pipe(rename('app.min.js'))
-		.pipe(gulp.dest(config.basePathCompile+'js/'));
+	for(var index in paths.js) {
+		if (paths.js.hasOwnProperty(index)) {
+			var file = paths.js[index],
+				dest = getDest(file, paths.compile.js);
+
+			for(i = 0; i < file.files.length; i++)
+				file.files[i] = paths.src + file.files[i];
+
+			gulp.src(file.files)
+				.pipe(concat((file.hasOwnProperty('name')) ? file.name : 'app.js', {newLine: ';\n\n'}))
+				.on('error', handleError)
+				.pipe(gulp.dest(dest))
+				.pipe(rename(path.basename((file.hasOwnProperty('name')) ? file.name : 'app.js').replace('.js', '') + '.min.js'))
+				.pipe(gulp.dest(dest));
+		}
+	}
 });
 
 /**
  * Compile javascript and minify (For production)
  **/
 gulp.task('jsProd', function(){
-	gulp.src(config.jsFiles)
-		.pipe(sourcemaps.init())
-		.pipe(concat('app.js', {newLine: ';'})).on('error', handleError)
-		.pipe(sourcemaps.write('maps'))
-		.pipe(gulp.dest(config.basePathCompile+'js/'));
-	return gulp.src(config.jsFiles)
-		.pipe(sourcemaps.init())
-		.pipe(concat('app.min.js', {newLine: ';'})).on('error', handleError)
-		.pipe(uglify())
-		.pipe(sourcemaps.write('maps'))
-		.pipe(gulp.dest(config.basePathCompile+'js/'));
+	for(var index in paths.js) {
+		if (paths.js.hasOwnProperty(index)) {
+			var file = paths.js[index],
+				dest = getDest(file, paths.compile.js);
+
+			for(i = 0; i < file.files.length; i++)
+				file.files[i] = paths.src + file.files[i];
+
+			gulp.src(file.files)
+				.pipe(sourcemaps.init())
+				.pipe(concat((file.hasOwnProperty('name')) ? file.name : 'app.js', {newLine: ';\n\n'}))
+				.on('error', handleError)
+				.pipe(sourcemaps.write('maps'))
+				.pipe(gulp.dest(dest));
+
+			gulp.src(file.files)
+				.pipe(sourcemaps.init())
+				.pipe(concat((file.hasOwnProperty('name')) ? file.name : 'app.js', {newLine: ';\n\n'}))
+				.on('error', handleError)
+				.pipe(uglify())
+				.pipe(rename(path.basename((file.hasOwnProperty('name')) ? file.name : 'app.js').replace('.js', '') + '.min.js'))
+				.pipe(sourcemaps.write('maps'))
+				.pipe(gulp.dest(dest));
+		}
+	}
 });
 
 /**
  * Minify images
  **/
 gulp.task('images', function(){
-	gulp.src(config.basePathCompile+'img/', {read:false})
-		.pipe(clean({force:true}));
-	return gulp.src(config.srcPath+'img/**/*')
-		.pipe(config.imagemin(config.imageminConf))
-		.pipe(gulp.dest(config.basePathCompile+'img/'));
+	for(var index in paths.images) {
+		if (paths.images.hasOwnProperty(index)) {
+			var file = paths.images[index],
+				dest = getDest(file, paths.compile.images);
+
+			gulp.src(dest, {read:false})
+				.pipe(clean({force:true}));
+
+			gulp.src(paths.src + file.src)
+				.pipe(config.imagemin(config.imageminConf))
+				.pipe(gulp.dest(dest));
+		}
+	}
 });
 
 /**
  * Fonts
  **/
 gulp.task('fonts', function(){
-	return gulp.src(config.srcPath+'fonts/**/*')
-		.pipe(gulp.dest(config.basePathCompile+'fonts'));
+	for(var index in paths.fonts) {
+		if (paths.fonts.hasOwnProperty(index)) {
+			var file = paths.fonts[index],
+				dest = getDest(file, paths.compile.fonts);
+
+			gulp.src(paths.src + file.src)
+				.pipe(gulp.dest(dest));
+		}
+	}
+});
+
+/**
+ * MJML
+ **/
+gulp.task('mjml', function(){
+	for(var index in paths.mjml) {
+		if (paths.mjml.hasOwnProperty(index)) {
+			var file = paths.mjml[index],
+				dest = getDest(file, paths.compile.mjml);
+
+			gulp.src(paths.src + file.src)
+				.pipe(mjml(mjmlEngine))
+				.pipe(gulp.dest(dest))
+		}
+	}
 });
 
 /**
  * Clean dirs
  **/
 gulp.task('clean', function(){
-	return gulp.src([config.basePathCompile], {read: false})
+	return gulp.src([paths.compile.base], {read: false})
 		.pipe(clean({force:true}));
 });
 
@@ -138,8 +226,8 @@ gulp.task('prod', ['images', 'jsProd', 'cssProd', 'fonts'], function(){
  * Watch files
  **/
 gulp.task('watch', function(){
-	gulp.watch(config.srcPath+'sass/**/*.scss', ['css']);
-	gulp.watch(config.srcPath+'img/**/*.*', ['images']);
-	gulp.watch(config.srcPath+'js/**/*.js', ['js']);
-	gulp.watch(config.srcPath+'fonts/**/*.*', ['fonts']);
+	gulp.watch(paths.src+'**/*.scss', ['css']);
+	gulp.watch(paths.src+'**/*.*', ['images']);
+	gulp.watch(paths.src+'**/*.js', ['js']);
+	gulp.watch(paths.src+'**/*.*', ['fonts']);
 });
