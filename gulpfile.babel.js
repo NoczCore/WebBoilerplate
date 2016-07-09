@@ -61,7 +61,7 @@ import postcss from 'gulp-postcss'
 import autoprefixer from 'autoprefixer'
 import mqpacker from 'css-mqpacker'
 import precss from 'precss'
-import rubstack from 'rucksack-css'
+import rucksack from 'rucksack-css'
 import cssnano from 'cssnano'
 import calc from 'postcss-calc'
 import stylelint from 'stylelint'
@@ -85,7 +85,7 @@ gulp.task('css', () => {
             stylelint({}),
             reporter({ clearMessages: true }),
             precss,
-            rubstack,
+            rucksack,
             mqpacker,
             calc,
             color
@@ -166,7 +166,7 @@ import imagemin from 'gulp-imagemin'
 import pngquant from 'imagemin-pngquant'
 
 gulp.task('images', () =>  {
-    rmDir(PATH.compiled.base + PATH.compiled.img)
+    rmDir(PATH.compiled.base + PATH.compiled.images)
     return PATH.sources.images.forEach(element => {
         if (element.dest != undefined && element.rmDest == true) {
             rmDir(transformPath(element.dest, null))
@@ -181,7 +181,7 @@ gulp.task('images', () =>  {
                 svgoPlugins: [{removeViewBox:false}],
                 use: [pngquant()]
             }))
-            .pipe(gulp.dest(transformPath(element.dest, PATH.compiled.base + PATH.compiled.img)))
+            .pipe(gulp.dest(transformPath(element.dest, PATH.compiled.base + PATH.compiled.images)))
             .pipe(notify({message: '[IMAGES TASK] ' + PATH.src + element.src + ' has been minified', onLast:true}))
     })
 })

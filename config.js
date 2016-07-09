@@ -7,7 +7,7 @@ const config = {
             // Relative to the base (Finish by slash)
             css: 'css/',
             js: 'js/',
-            img: 'img/'
+            images: 'img/'
         },
 
         // Source dir (Finish by slash)
