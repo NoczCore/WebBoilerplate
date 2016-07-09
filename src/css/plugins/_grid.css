@@ -6,8 +6,8 @@
 
 .container {
     margin-right: auto;
-    margin-left: auto;
     padding-left: 15px;
+    margin-left: auto;
     padding-right: 15px;
 }
 @media (min-width: 768px) {
