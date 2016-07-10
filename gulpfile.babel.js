@@ -35,6 +35,9 @@ function transformPath(p, def){
         return transformArrayPath(p, def)
     }
     let dest = '';
+    if (p.substring(0, 2) == './') {
+        p = p.substring(2, p.length)
+    }
     if (p != null) {
         if (!path.isAbsolute(p) && def != null) {
             dest += def
@@ -43,7 +46,18 @@ function transformPath(p, def){
     } else if (def != null) {
         dest += def
     }
-    return './' + dest
+
+    if (path.isAbsolute(dest)) {
+        if (dest.charAt(0) == '/') {
+            dest = '.' + dest;
+        } else if (dest.substr(0, 1) != './') {
+            dest = './' + dest
+        }
+    } else {
+        dest = './' + dest
+    }
+
+    return dest
 }
 
 function rmDir(path){
