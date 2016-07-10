@@ -35,10 +35,11 @@ function transformPath(p, def){
         return transformArrayPath(p, def)
     }
     let dest = '';
-    if (p.substring(0, 2) == './') {
-        p = p.substring(2, p.length)
-    }
     if (p != null) {
+        if (p.substring(0, 2) == './') {
+            p = p.substring(2, p.length)
+        }
+
         if (!path.isAbsolute(p) && def != null) {
             dest += def
         }
