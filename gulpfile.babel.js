@@ -79,6 +79,7 @@ import calc from 'postcss-calc'
 import stylelint from 'stylelint'
 import reporter from 'postcss-reporter'
 import color from 'postcss-colour-functions'
+import coloralpha from 'postcss-color-alpha'
 
 gulp.task('css', () => {
     rmDir(PATH.compiled.base + PATH.compiled.css)
@@ -102,7 +103,8 @@ gulp.task('css', () => {
             rucksack,
             mqpacker,
             calc,
-            color
+            color,
+            coloralpha
         ]))
 
         task.pipe(rename((file.name != undefined) ? file.name + '.css' : replaceExtension(filename, 'css')))
