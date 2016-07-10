@@ -1,7 +1,7 @@
 const config = {
     paths: {
         compiled: {
-            // Base (Finish by slash)
+            // Base relative to the main dir (Finish by slash)
             base: 'dist/',
 
             // Relative to the base (Finish by slash)
@@ -13,10 +13,16 @@ const config = {
         // Source dir (Finish by slash)
         src: 'src/',
 
-        // Backup dir (Finish by slash)
-        backup: 'backup/',
+        // Backups paths
+        backup: {
+            // Relative to the source dir or absolute to the main dir
+            src: '**/*',
+            // Relative to compiled.base or absolute to the main dir
+            dest: 'backup/'
+        },
 
-        // The sources path is relative to the source dir
+        // The src paths is relative to the source dir or absolute to the main dir
+        // The dest paths is relative to compiled.base or absolute to the main dir
         sources: {
             css: [
                 {
@@ -37,6 +43,7 @@ const config = {
             ]
         }
     },
+    // The watchers paths is relative to the source dir or absolute to the main dir
     watcher: {
         reloadWhenChange: [],
         css: ['css/**/*.css'],

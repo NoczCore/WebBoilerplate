@@ -37,7 +37,8 @@ At first, open the config.js file.
 - ``config.paths.compiled.js`` The default destination of javascript compilation
 - ``config.paths.compiled.images`` The default destination of reduced images
 - ``config.paths.src`` Source dir
-- ``config.paths.backup`` Backup dir
+- ``config.paths.backup.src` Path of zip content
+- ``config.paths.backup.dest` Path of zip destination
 - ``config.paths.sources`` See explanation below
 - ``config.watcher.reloadWhenChange`` Reload the browser when files is updated
 - ``config.watcher.css`` The CSS files will be watched
@@ -48,14 +49,21 @@ At first, open the config.js file.
 - ``config.babel`` [Babel options](https://babeljs.io/docs/usage/options/)
 - ``config.es6transpiler`` [ES6-module-transpiler](https://github.com/ryanseddon/gulp-es6-module-transpiler)
 
+**When the path is absolute, the base is the main dir.**
+
 ###Add CSS, JS, Image dir, or a copy
 You just have to add an object in CSS, JS, copy or images array in ``config.paths.sources``.
 
 ####Examples:
 ```
 {
-  src: 'css/app.css' // The source file to be compiled, relative to config.paths.src (Required)
-  dest: 'css/' // The destination of compiled files, relative to config.paths.compiled.base (Optional)
+  src: 'css/app.css' // The source file to be compiled, relative to config.paths.src or absolute to the main dir
+  (Required)
+  dest: 'css/' // The destination of compiled files, relative to config.paths.compiled.base (When is css, js or
+  images, is relative to default path for this type)
+   or
+  absolute
+   to the main dir (Optional)
   name: 'style' // The compiled filename, no contain extension (Optional)
 }
 ```

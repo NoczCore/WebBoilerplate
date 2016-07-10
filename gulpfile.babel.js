@@ -43,10 +43,7 @@ function transformPath(p, def){
     } else if (def != null) {
         dest += def
     }
-    if (path.isAbsolute(dest)) {
-        dest = '.'+dest
-    }
-    return dest
+    return './' + dest
 }
 
 function rmDir(path){
@@ -71,13 +68,15 @@ import color from 'postcss-colour-functions'
 gulp.task('css', () => {
     rmDir(PATH.compiled.base + PATH.compiled.css)
     return PATH.sources.css.forEach(file => {
-        let filename = getFilename(file.src)
+        let filename = getFilename(file.src),
+            src = transformPath(file.src, PATH.src),
+            dest = transformPath(file.dest, PATH.compiled.base + PATH.compiled.css)
 
         if (file.dest != undefined && file.rmDest == true) {
-            rmDir(transformPath(file.dest, PATH.compiled.base + PATH.compiled.css))
+            rmDir(dest)
         }
 
-        let task = gulp.src(PATH.src + file.src)
+        let task = gulp.src(src)
 
         .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
         .pipe(postcss([
@@ -92,11 +91,11 @@ gulp.task('css', () => {
         ]))
 
         task.pipe(rename((file.name != undefined) ? file.name + '.css' : replaceExtension(filename, 'css')))
-        .pipe(gulp.dest(transformPath(file.dest, PATH.compiled.base + PATH.compiled.css)))
+        .pipe(gulp.dest(dest))
 
         .pipe(postcss([cssnano]))
         .pipe(rename((file.name != undefined) ? file.name+'.min.css' : replaceExtension(filename, 'min.css')))
-        .pipe(gulp.dest(transformPath(file.dest, PATH.compiled.base + PATH.compiled.css)))
+        .pipe(gulp.dest(dest))
 
         .pipe(notify({message: '[CSS TASK] ' + filename + ' has been compiled', onLast:true}))
         .pipe(browserSync.stream({once:true}))
@@ -113,23 +112,25 @@ import uglify from 'gulp-uglify'
 gulp.task('js', () => {
     rmDir(PATH.compiled.base + PATH.compiled.js)
     return PATH.sources.js.forEach(file => {
-        let filename = getFilename(file.src)
+        let filename = getFilename(file.src),
+            src = transformPath(file.src, PATH.src),
+            dest = transformPath(file.dest, PATH.compiled.base + PATH.compiled.js)
 
         if (file.dest != undefined && file.rmDest == true) {
-            rmDir(transformPath(file.dest, PATH.compiled.base + PATH.compiled.js))
+            rmDir(dest)
         }
 
-        gulp.src(PATH.src + file.src)
+        gulp.src(src)
 
         .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
         .pipe(es6transpiler(config.es6transpiler))
         .pipe(babel(config.babel))
         .pipe(rename((file.name != undefined) ? file.name + '.js' : filename))
-        .pipe(gulp.dest(transformPath(file.dest, PATH.compiled.base + PATH.compiled.js)))
+        .pipe(gulp.dest(dest))
 
         .pipe(uglify())
         .pipe(rename((file.name != undefined) ? file.name+'.min.js' : replaceExtension(filename, 'min.js')))
-        .pipe(gulp.dest(transformPath(file.dest, PATH.compiled.base + PATH.compiled.js)))
+        .pipe(gulp.dest(dest))
 
         .pipe(notify({message: '[JS TASK] ' + filename + ' has been compiled', onLast:true}))
         .pipe(browserSync.stream({once:true}))
@@ -141,20 +142,23 @@ gulp.task('js', () => {
  */
 gulp.task('copy', () => {
     return PATH.sources.copy.forEach(element => {
+        let dest = transformPath(element.dest, PATH.compiled.base),
+            src = transformPath(element.src, PATH.src)
+
         if (element.rmDest == true) {
-            rmDir(transformPath(element.dest, null))
+            rmDir(dest)
         }
 
         setTimeout(() => {
-            let task = gulp.src(PATH.src + element.src)
+            let task = gulp.src(src)
             .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
 
             if (element.name != undefined) {
                 task.pipe(rename(element.name))
             }
 
-            task.pipe(gulp.dest(transformPath(element.dest, null)))
-            .pipe(notify({message: '[COPY TASK] ' + PATH.src + element.src + ' has been copied to ' + transformPath(element.dest, null), onLast:true}))
+            task.pipe(gulp.dest(dest))
+            .pipe(notify({message: '[COPY TASK] ' + src + ' has been copied to ' + dest, onLast:true}))
         }, 500)
     })
 })
@@ -168,11 +172,14 @@ import pngquant from 'imagemin-pngquant'
 gulp.task('images', () =>  {
     rmDir(PATH.compiled.base + PATH.compiled.images)
     return PATH.sources.images.forEach(element => {
+        let dest = transformPath(element.dest, PATH.compiled.base + PATH.compiled.images),
+            src = transformPath(element.src, PATH.src)
+
         if (element.dest != undefined && element.rmDest == true) {
-            rmDir(transformPath(element.dest, null))
+            rmDir(dest)
         }
 
-        gulp.src(PATH.src + element.src)
+        gulp.src(src)
             .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
             .pipe(imagemin({
                 optimizationLevel: 5,
@@ -181,8 +188,8 @@ gulp.task('images', () =>  {
                 svgoPlugins: [{removeViewBox:false}],
                 use: [pngquant()]
             }))
-            .pipe(gulp.dest(transformPath(element.dest, PATH.compiled.base + PATH.compiled.images)))
-            .pipe(notify({message: '[IMAGES TASK] ' + PATH.src + element.src + ' has been minified', onLast:true}))
+            .pipe(gulp.dest(dest))
+            .pipe(notify({message: '[IMAGES TASK] ' + src + ' has been minified', onLast:true}))
     })
 })
 
@@ -193,10 +200,10 @@ import zip from 'gulp-zip'
 
 gulp.task('zip', () =>  {
     let date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/ /, '_').split(':').join('-')
-    gulp.src(PATH.src + '**/*')
+    gulp.src(transformPath(PATH.backup.src, PATH.src))
     .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe(zip('backup-' + date + '.zip'))
-    .pipe(gulp.dest(PATH.backup))
+    .pipe(gulp.dest(transformPath(PATH.backup.dest, PATH.compiled.base)))
     .pipe(notify({message: '[ZIP TASK] Backup created', onLast:true}))
 })
 
