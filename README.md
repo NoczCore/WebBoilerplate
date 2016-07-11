@@ -83,7 +83,7 @@ You just have to add an object in CSS, JS, copy or images array in ``config.path
 - Add deployment system
 
 ##Licence
-This boilerplate is released under the [MIT licence](https://github.com/NoczCore/WebBoilerplate).
+This boilerplate is released under the [MIT licence](https://raw.githubusercontent.com/NoczCore/WebBoilerplate/master/LICENSE).
 
 ##Disclaimer
 I am sorry for my poor English. Feel free to make changes in this README.
