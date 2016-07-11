@@ -17,7 +17,6 @@
     "gulp": "^3.9.1",
     "gulp-append-prepend": "^1.0.0",
     "gulp-babel": "^6.1.2",
-    "gulp-clean": "^0.3.2",
     "gulp-copy": "0.0.2",
     "gulp-es6-module-transpiler": "^0.2.2",
     "gulp-imagemin": "^3.0.1",

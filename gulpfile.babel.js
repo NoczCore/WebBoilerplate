@@ -3,7 +3,7 @@ import path from 'path'
 import rename from 'gulp-rename'
 import notify from 'gulp-notify'
 import plumber from 'gulp-plumber'
-import clean from 'gulp-clean'
+import del from 'del'
 import config from './config.js'
 
 const PATH = config.paths
@@ -62,8 +62,7 @@ function transformPath(p, def){
 }
 
 function rmDir(path){
-     gulp.src(path, {read:false})
-    .pipe(clean({force:true}));
+    return del.sync(path)
 }
 
 /**
