@@ -4,7 +4,9 @@ My boilerplate to start a web project quickly.
 
 ##Features
 - CSS Compilation with [PostCSS](https://www.npmjs.com/package/gulp-babel) (Plugins: [autoprefixer](https://github.com/postcss/autoprefixer), [css-mqpacker](https://github.com/hail2u/node-css-mqpacker), [precss](https://github.com/jonathantneal/precss), [rucksack-css](https://github.com/simplaio/rucksack), [cssnano](https://github.com/ben-eb/cssnano), [postcss-calc](https://github.com/postcss/postcss-calc), [stylelint](https://github.com/stylelint/stylelint) and [postcss-reporter](https://github.com/postcss/postcss-reporter), [postcss-colour-functions](https://www.npmjs.com/package/postcss-colour-functions))
-- ES6 (JavaScript) compilation with [Babel](https://www.npmjs.com/package/gulp-babel), [ES6-module-transpiler](https://github.com/ryanseddon/gulp-es6-module-transpiler) and [Uglify](https://www.npmjs.com/package/gulp-uglify)
+- ES6 (JavaScript) compilation with [Babel](https://www.npmjs.com/package/gulp-babel), [ES6-module-transpiler]
+(https://github.com/ryanseddon/gulp-es6-module-transpiler), [gulp-append-prepend](https://github.com/NoczCore/gulp-append-prepend) and [Uglify](https://www.npmjs
+.com/package/gulp-uglify)
 - Reducing images weight with [Imagemin](https://www.npmjs.com/package/gulp-imagemin) and [imagemin-pngquant](https://www.npmjs.com/package/imagemin-pngquant)
 - Copy files or dirs
 - Create ZIP backup width [gulp-zip](https://www.npmjs.com/package/gulp-zip)
