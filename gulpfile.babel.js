@@ -123,6 +123,7 @@ gulp.task('css', () => {
 import babel from 'gulp-babel'
 import es6transpiler from 'gulp-es6-module-transpiler'
 import uglify from 'gulp-uglify'
+import gap from 'gulp-append-prepend'
 
 gulp.task('js', () => {
     rmDir(PATH.compiled.base + PATH.compiled.js)
@@ -135,12 +136,21 @@ gulp.task('js', () => {
             rmDir(dest)
         }
 
-        gulp.src(src)
+        let task = gulp.src(src)
 
         .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
         .pipe(es6transpiler(config.es6transpiler))
         .pipe(babel(config.babel))
-        .pipe(rename((file.name != undefined) ? file.name + '.js' : filename))
+
+        if (file.prepend != undefined) {
+            task.pipe(gap.prependFile(transformPath(file.prepend, PATH.src)))
+        }
+
+        if (file.append != undefined) {
+            task.pipe(gulpif((file.append != undefined) ? true : false, gap.appendFile(transformPath(file.append, PATH.src))))
+        }
+
+        task.pipe(rename((file.name != undefined) ? file.name + '.js' : filename))
         .pipe(gulp.dest(dest))
 
         .pipe(uglify())

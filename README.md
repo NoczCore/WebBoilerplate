@@ -57,14 +57,13 @@ You just have to add an object in CSS, JS, copy or images array in ``config.path
 ####Examples:
 ```
 {
-  src: 'css/app.css' // The source file to be compiled, relative to config.paths.src or absolute to the main dir
+  src: 'css/app.css', // The source file to be compiled, relative to config.paths.src or absolute to the main dir
   (Required)
-  dest: 'css/' // The destination of compiled files, relative to config.paths.compiled.base (When is css, js or
-  images, is relative to default path for this type)
-   or
-  absolute
-   to the main dir (Optional)
-  name: 'style' // The compiled filename, no contain extension (Optional)
+  dest: 'css/', // The destination of compiled files, relative to config.paths.compiled.base (When is css, js or
+  images, is relative to default path for this type) or absolute to the main dir (Optional)
+  name: 'style', // The compiled filename, no contain extension (Optional)
+  prepend: ['js/jquery.js'], // File prepending the compilation file (Optional, only for JS)
+  append: ['js/myawesomefile.js'] // File appending the compilation file (Optional, only for JS)
 }
 ```
 
@@ -83,7 +82,8 @@ You just have to add an object in CSS, JS, copy or images array in ``config.path
 - Add deployment system
 
 ##Licence
-This boilerplate is released under the [MIT licence](https://github.com/NoczCore/WebBoilerplate).
+This boilerplate is released under the [MIT licence](https://raw.githubusercontent
+.com/NoczCore/WebBoilerplate/master/LICENCE).
 
 ##Disclaimer
 I am sorry for my poor English. Feel free to make changes in this README.
