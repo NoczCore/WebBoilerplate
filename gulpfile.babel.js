@@ -77,7 +77,7 @@ import cssnano from 'cssnano'
 import calc from 'postcss-calc'
 import stylelint from 'stylelint'
 import reporter from 'postcss-reporter'
-import color from 'postcss-colour-functions'
+import color from 'postcss-sass-color-functions'
 
 gulp.task('css', () => {
     rmDir(PATH.compiled.base + PATH.compiled.css)
