@@ -14,9 +14,11 @@
     "browser-sync": "^2.13.0",
     "css-mqpacker": "^5.0.1",
     "cssnano": "^3.7.1",
+    "del": "^2.2.1",
     "gulp": "^3.9.1",
     "gulp-append-prepend": "^1.0.2",
     "gulp-babel": "^6.1.2",
+    "gulp-compass": "^2.1.0",
     "gulp-copy": "0.0.2",
     "gulp-es6-module-transpiler": "^0.2.2",
     "gulp-imagemin": "^3.0.1",
@@ -31,6 +33,7 @@
     "postcss-reporter": "^1.4.1",
     "postcss-sass-color-functions": "^1.1.0",
     "precss": "^1.4.0",
+    "recast": "^0.11.10",
     "rucksack-css": "^0.8.6",
     "stylelint": "^6.9.0"
   }

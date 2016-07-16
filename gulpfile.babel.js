@@ -4,6 +4,7 @@ import rename from 'gulp-rename'
 import notify from 'gulp-notify'
 import plumber from 'gulp-plumber'
 import del from 'del'
+import gap from 'gulp-append-prepend'
 import config from './config.js'
 
 const PATH = config.paths
@@ -78,6 +79,7 @@ import calc from 'postcss-calc'
 import stylelint from 'stylelint'
 import reporter from 'postcss-reporter'
 import color from 'postcss-sass-color-functions'
+import compass from 'gulp-compass'
 
 gulp.task('css', () => {
     rmDir(PATH.compiled.base + PATH.compiled.css)
@@ -93,21 +95,39 @@ gulp.task('css', () => {
         let task = gulp.src(src)
 
         .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-        .pipe(postcss([
-            autoprefixer(config.autoprefixer),
-            stylelint({}),
-            reporter({ clearMessages: true }),
-            precss,
-            rucksack,
-            mqpacker,
-            calc,
-            color
-        ]))
+
+        if (file.compass != undefined && file.compass == true) {
+            task.pipe(compass({
+                css: dest,
+                sass: path.dirname(src) + '/'
+            }))
+        } else {
+            task.pipe(postcss([
+                stylelint({}),
+                reporter({ clearMessages: true }),
+                precss,
+                rucksack,
+                color
+            ]))
+        }
+
+        if (file.prepend != undefined) {
+            task.pipe(gap.prependFile(transformPath(file.prepend, PATH.src)))
+        }
+
+        if (file.append != undefined) {
+            task.pipe(gap.appendFile(transformPath(file.append, PATH.src)))
+        }
 
         task.pipe(rename((file.name != undefined) ? file.name + '.css' : replaceExtension(filename, 'css')))
         .pipe(gulp.dest(dest))
 
-        .pipe(postcss([cssnano]))
+        .pipe(postcss([
+            mqpacker,
+            calc,
+            autoprefixer(config.autoprefixer),
+            cssnano
+        ]))
         .pipe(rename((file.name != undefined) ? file.name+'.min.css' : replaceExtension(filename, 'min.css')))
         .pipe(gulp.dest(dest))
 
@@ -122,7 +142,6 @@ gulp.task('css', () => {
 import babel from 'gulp-babel'
 import es6transpiler from 'gulp-es6-module-transpiler'
 import uglify from 'gulp-uglify'
-import gap from 'gulp-append-prepend'
 
 gulp.task('js', () => {
     rmDir(PATH.compiled.base + PATH.compiled.js)
@@ -146,7 +165,7 @@ gulp.task('js', () => {
         }
 
         if (file.append != undefined) {
-            task.pipe(gulpif((file.append != undefined) ? true : false, gap.appendFile(transformPath(file.append, PATH.src))))
+            task.pipe(gap.appendFile(transformPath(file.append, PATH.src)))
         }
 
         task.pipe(rename((file.name != undefined) ? file.name + '.js' : filename))
