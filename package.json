@@ -32,6 +32,7 @@
     "postcss-calc": "^5.2.1",
     "postcss-reporter": "^1.4.1",
     "postcss-sass-color-functions": "^1.1.0",
+    "postcss-scss": "^0.1.8",
     "precss": "^1.4.0",
     "recast": "^0.11.10",
     "rucksack-css": "^0.8.6",
