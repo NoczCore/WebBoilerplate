@@ -80,6 +80,7 @@ import stylelint from 'stylelint'
 import reporter from 'postcss-reporter'
 import color from 'postcss-sass-color-functions'
 import compass from 'gulp-compass'
+import scss from 'postcss-scss'
 
 gulp.task('css', () => {
     rmDir(PATH.compiled.base + PATH.compiled.css)
@@ -92,7 +93,8 @@ gulp.task('css', () => {
             rmDir(dest)
         }
 
-        let task = gulp.src(src)
+        let options = {syntax: scss, parser: scss},
+            task = gulp.src(src)
 
         .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
 
@@ -105,10 +107,10 @@ gulp.task('css', () => {
             task.pipe(postcss([
                 stylelint({}),
                 reporter({ clearMessages: true }),
-                precss,
+                precss({extension:'scss'}),
                 rucksack,
                 color
-            ]))
+            ], options))
         }
 
         if (file.prepend != undefined) {
@@ -127,7 +129,7 @@ gulp.task('css', () => {
             calc,
             autoprefixer(config.autoprefixer),
             cssnano
-        ]))
+        ], options))
         .pipe(rename((file.name != undefined) ? file.name+'.min.css' : replaceExtension(filename, 'min.css')))
         .pipe(gulp.dest(dest))
 

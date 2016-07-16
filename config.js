@@ -26,7 +26,7 @@ const config = {
         sources: {
             css: [
                 {
-                    src: 'css/app.css'
+                    src: 'css/app.scss',
                 }
             ],
             js: [
