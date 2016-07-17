@@ -12,6 +12,8 @@ const config = {
 
         // Source dir (Finish by slash)
         src: 'src/',
+        // Temp dir (Finish by slash)
+        tmp: 'tmp/',
 
         // Backups paths
         backup: {
@@ -26,7 +28,7 @@ const config = {
         sources: {
             css: [
                 {
-                    src: 'css/app.scss',
+                    src: 'css/app.scss'
                 }
             ],
             js: [

@@ -74,63 +74,58 @@ import autoprefixer from 'autoprefixer'
 import mqpacker from 'css-mqpacker'
 import precss from 'precss'
 import rucksack from 'rucksack-css'
-import cssnano from 'cssnano'
+import cssnano from 'gulp-cssnano'
 import calc from 'postcss-calc'
 import stylelint from 'stylelint'
 import reporter from 'postcss-reporter'
 import color from 'postcss-sass-color-functions'
 import compass from 'gulp-compass'
 import scss from 'postcss-scss'
+import gulpif from 'gulp-if'
 
 gulp.task('css', () => {
     rmDir(PATH.compiled.base + PATH.compiled.css)
     return PATH.sources.css.forEach(file => {
-        let filename = getFilename(file.src),
-            src = transformPath(file.src, PATH.src),
-            dest = transformPath(file.dest, PATH.compiled.base + PATH.compiled.css)
+        let src = transformPath(file.src, PATH.src),
+            filename = (file.name != undefined) ? file.name : path.basename(src),
+            dest = transformPath(file.dest, PATH.compiled.base + PATH.compiled.css),
+            postcss_opts = {syntax: scss, parser: scss}
 
         if (file.dest != undefined && file.rmDest == true) {
             rmDir(dest)
         }
 
-        let options = {syntax: scss, parser: scss},
-            task = gulp.src(src)
-
+        gulp.src(src)
         .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
 
-        if (file.compass != undefined && file.compass == true) {
-            task.pipe(compass({
-                css: dest,
-                sass: path.dirname(src) + '/'
-            }))
-        } else {
-            task.pipe(postcss([
+        .pipe(gulpif(
+            (file.compass != undefined && file.compass === true),
+            compass({
+                css: PATH.tmp+'css/',
+                sass: path.dirname(src)
+            }),
+            postcss([
                 stylelint({}),
                 reporter({ clearMessages: true }),
-                precss({extension:'scss'}),
+                precss({extension: path.extname(src).substr(1, path.extname(src).length)}),
                 rucksack,
-                color
-            ], options))
-        }
-
-        if (file.prepend != undefined) {
-            task.pipe(gap.prependFile(transformPath(file.prepend, PATH.src)))
-        }
-
-        if (file.append != undefined) {
-            task.pipe(gap.appendFile(transformPath(file.append, PATH.src)))
-        }
-
-        task.pipe(rename((file.name != undefined) ? file.name + '.css' : replaceExtension(filename, 'css')))
+                color,
+                mqpacker,
+                calc,
+                autoprefixer(config.autoprefixer)
+            ], postcss_opts)
+        ))
+        .pipe(rename({
+            extname: '.css',
+            basename: filename
+        }))
         .pipe(gulp.dest(dest))
 
-        .pipe(postcss([
-            mqpacker,
-            calc,
-            autoprefixer(config.autoprefixer),
-            cssnano
-        ], options))
-        .pipe(rename((file.name != undefined) ? file.name+'.min.css' : replaceExtension(filename, 'min.css')))
+        .pipe(cssnano())
+        .pipe(rename({
+            extname: '.min.css',
+            basename: filename
+        }))
         .pipe(gulp.dest(dest))
 
         .pipe(notify({message: '[CSS TASK] ' + filename + ' has been compiled', onLast:true}))

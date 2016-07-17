@@ -5,11 +5,10 @@ My boilerplate to start a web project quickly.
 ##Features
 - CSS Compilation with [PostCSS](https://www.npmjs.com/package/gulp-babel) (Plugins: [autoprefixer](https://github
 .com/postcss/autoprefixer), [css-mqpacker](https://github.com/hail2u/node-css-mqpacker), [precss](https://github
-.com/jonathantneal/precss), [rucksack-css](https://github.com/simplaio/rucksack), [cssnano](https://github
-.com/ben-eb/cssnano), [postcss-calc](https://github.com/postcss/postcss-calc), [stylelint](https://github
+.com/jonathantneal/precss), [rucksack-css](https://github.com/simplaio/rucksack), [postcss-calc](https://github.com/postcss/postcss-calc), [stylelint](https://github
 .com/stylelint/stylelint) and [postcss-reporter](https://github.com/postcss/postcss-reporter),
 [postcss-sass-color-functions](https://www.npmjs.com/package/postcss-sass-color-functions)) and with [Compass]
-(http://compass-style.org/) if you want
+(http://compass-style.org/) if you want (However this is not recommended). Minify css with [gulp-cssnano](https://www.npmjs.com/package/gulp-cssnano)
 - ES6 (JavaScript) compilation with [Babel](https://www.npmjs.com/package/gulp-babel), [ES6-module-transpiler]
 (https://github.com/ryanseddon/gulp-es6-module-transpiler), [gulp-append-prepend](https://github.com/NoczCore/gulp-append-prepend) and [Uglify](https://www.npmjs
 .com/package/gulp-uglify)
@@ -71,8 +70,8 @@ You just have to add an object in CSS, JS, copy or images array in ``config.path
   images, is relative to default path for this type) or absolute to the main dir (Optional)
   name: 'style', // The compiled filename, no contain extension (Optional)
   prepend: ['js/jquery.js'], // File prepending the compilation file (Optional, only for JS)
-  append: ['js/myawesomefile.js'], // File appending the compilation file (Optional, only for JS and CSS)
-  compass: true // If you want use Compass (Optional, only for CSS)
+  append: ['js/myawesomefile.js'], // File appending the compilation file (Optional, only for JS)
+  compass: true // If you want use Compass (Optional, however this is not recommended, only for CSS)
 }
 ```
 
