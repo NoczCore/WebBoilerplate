@@ -87,7 +87,7 @@ gulp.task('css', () => {
     rmDir(PATH.compiled.base + PATH.compiled.css)
     return PATH.sources.css.forEach(file => {
         let src = transformPath(file.src, PATH.src),
-            filename = (file.name != undefined) ? file.name : path.basename(src),
+            filename = (file.name != undefined) ? file.name : path.basename(src, path.extname(src)),
             dest = transformPath(file.dest, PATH.compiled.base + PATH.compiled.css),
             postcss_opts = {syntax: scss, parser: scss}
 
