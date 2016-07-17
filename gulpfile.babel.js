@@ -12,14 +12,6 @@ const PATH = config.paths
 /**
  * FUNCTIONS
  */
-function replaceExtension(filename, newExtension){
-    return filename.replace(filename.split(".").pop(), newExtension)
-}
-
-function getFilename(path){
-    return path.split("/").pop()
-}
-
 function transformArrayPath(paths, def){
     if (!(paths instanceof Array)) {
         return transformPath(paths, def)
@@ -35,6 +27,7 @@ function transformPath(p, def){
     if (p instanceof Array) {
         return transformArrayPath(p, def)
     }
+
     let dest = '';
     if (p != null) {
         if (p.substring(0, 2) == './') {
@@ -143,8 +136,8 @@ import uglify from 'gulp-uglify'
 gulp.task('js', () => {
     rmDir(PATH.compiled.base + PATH.compiled.js)
     return PATH.sources.js.forEach(file => {
-        let filename = getFilename(file.src),
-            src = transformPath(file.src, PATH.src),
+        let src = transformPath(file.src, PATH.src),
+            filename = (file.name != undefined) ? file.name : path.basename(src, path.extname(src)),
             dest = transformPath(file.dest, PATH.compiled.base + PATH.compiled.js)
 
         if (file.dest != undefined && file.rmDest == true) {
@@ -165,11 +158,17 @@ gulp.task('js', () => {
             task.pipe(gap.appendFile(transformPath(file.append, PATH.src)))
         }
 
-        task.pipe(rename((file.name != undefined) ? file.name + '.js' : filename))
+        task.pipe(rename({
+            extname: '.js',
+            basename: filename
+        }))
         .pipe(gulp.dest(dest))
 
         .pipe(uglify())
-        .pipe(rename((file.name != undefined) ? file.name+'.min.js' : replaceExtension(filename, 'min.js')))
+        .pipe(rename({
+            extname: '.min.js',
+            basename: filename
+        }))
         .pipe(gulp.dest(dest))
 
         .pipe(notify({message: '[JS TASK] ' + filename + ' has been compiled', onLast:true}))
