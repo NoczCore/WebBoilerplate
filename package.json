@@ -21,6 +21,7 @@
     "gulp-copy": "0.0.2",
     "gulp-cssnano": "^2.1.2",
     "gulp-es6-module-transpiler": "^0.2.2",
+    "gulp-flatten": "^0.3.1",
     "gulp-if": "^2.0.1",
     "gulp-imagemin": "^3.0.1",
     "gulp-notify": "^2.2.0",

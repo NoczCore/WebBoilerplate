@@ -5,6 +5,7 @@ import notify from 'gulp-notify'
 import plumber from 'gulp-plumber'
 import del from 'del'
 import gap from 'gulp-append-prepend'
+import flatten from 'gulp-flatten'
 import config from './config.js'
 
 const PATH = config.paths
@@ -45,11 +46,13 @@ function transformPath(p, def){
     if (path.isAbsolute(dest)) {
         if (dest.charAt(0) == '/') {
             dest = '.' + dest;
-        } else if (dest.substr(0, 1) != './') {
+        } else if (dest.substr(0, 2) != './') {
             dest = './' + dest
         }
     } else {
-        dest = './' + dest
+        if (dest.substr(0, 2) != './') {
+            dest = './' + dest
+        }
     }
 
     return dest
@@ -108,6 +111,7 @@ gulp.task('css', () => {
                 autoprefixer(config.autoprefixer)
             ], postcss_opts)
         ))
+        .pipe(flatten())
         .pipe(rename({
             extname: '.css',
             basename: filename
@@ -158,7 +162,8 @@ gulp.task('js', () => {
             task.pipe(gap.appendFile(transformPath(file.append, PATH.src)))
         }
 
-        task.pipe(rename({
+        task.pipe(flatten())
+        .pipe(rename({
             extname: '.js',
             basename: filename
         }))
