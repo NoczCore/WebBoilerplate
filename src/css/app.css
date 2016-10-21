@@ -1,4 +1,15 @@
 /**
+* CONFIG
+**/
+
+// GRID
+$cols: 13;
+$gutter: 15px;
+$breakpoint: xs, sm, md, lg;
+$breakpointWidth: 0, 200px, 300px, 400px;
+$breakpointContainer: 80px, 160px, 240px, 320px;
+
+/**
 * VARIABLES
 **/
 @import "variables/fonts";

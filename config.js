@@ -28,7 +28,7 @@ const config = {
         sources: {
             css: [
                 {
-                    src: 'css/app.scss'
+                    src: 'css/app.css'
                 }
             ],
             js: [
@@ -45,6 +45,7 @@ const config = {
             ]
         }
     },
+    
     // The watchers paths is relative to the source dir or absolute to the main dir
     watcher: {
         reloadWhenChange: [],
@@ -52,18 +53,22 @@ const config = {
         js: ['js/**/*.js'],
         images: ['img/**/*']
     },
+
     browserSync: {
         proxy: "local.dev",
         open: true,
         injectChanges: true,
         startPath: "/"
     },
+
     autoprefixer: {
-        browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4']
+        browsers: ['last 2 version']
     },
+
     babel: {
         presets: ['es2015']
     },
+
     es6transpiler: {
         formatter: 'bundle'
     }

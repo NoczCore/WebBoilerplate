@@ -58,6 +58,7 @@ function transformPath(p, def){
     return dest
 }
 
+
 function rmDir(path){
     return del.sync(path)
 }
@@ -68,7 +69,6 @@ function rmDir(path){
 import postcss from 'gulp-postcss'
 import autoprefixer from 'autoprefixer'
 import mqpacker from 'css-mqpacker'
-import precss from 'precss'
 import rucksack from 'rucksack-css'
 import cssnano from 'gulp-cssnano'
 import calc from 'postcss-calc'
@@ -76,8 +76,30 @@ import stylelint from 'stylelint'
 import reporter from 'postcss-reporter'
 import color from 'postcss-sass-color-functions'
 import compass from 'gulp-compass'
-import scss from 'postcss-scss'
 import gulpif from 'gulp-if'
+import mixins from 'postcss-sassy-mixins'
+import vars from 'postcss-simple-vars'
+import pcssImport from 'postcss-partial-import'
+import pcssFor from 'postcss-for'
+import scss from 'postcss-scss'
+import functions from 'postcss-functions'
+import conds from 'postcss-conditionals'
+import extend from 'postcss-sass-extend'
+import nested from 'postcss-nested'
+import each from './plugins/sassy-each'
+import sassyCalc from './plugins/sassy-calc'
+import mqMinMax from 'postcss-media-minmax'
+import responsiveFont from 'postcss-responsive-type'
+import center from 'postcss-center'
+import flexbox from 'postcss-flexbox'
+import imageSet from 'postcss-image-set'
+import fontPath from 'postcss-fontpath'
+import zindex from 'postcss-zindex'
+import perfectionist from 'perfectionist'
+import comments from 'postcss-discard-comments'
+import duplicates from 'postcss-discard-duplicates'
+import empty from 'postcss-discard-empty'
+import unused from 'postcss-discard-unused'
 
 gulp.task('css', () => {
     rmDir(PATH.compiled.base + PATH.compiled.css)
@@ -103,12 +125,37 @@ gulp.task('css', () => {
             postcss([
                 stylelint({}),
                 reporter({ clearMessages: true }),
-                precss({extension: path.extname(src).substr(1, path.extname(src).length)}),
-                rucksack,
-                color,
-                mqpacker,
-                calc,
-                autoprefixer(config.autoprefixer)
+
+                pcssImport(),
+                vars({ silent: true }),
+                each(),
+                pcssFor(),
+                mixins({}),
+                functions({}),
+                conds(),
+                sassyCalc(),
+                extend(),
+                nested(),
+
+                responsiveFont(),
+                center(),
+                flexbox(),
+                imageSet(),
+                fontPath(),
+
+                rucksack(),
+                color(),
+                calc(),
+                zindex(),
+
+                mqpacker(),
+                mqMinMax(),
+                comments(),
+                empty(),
+                unused(),
+                duplicates(),
+                autoprefixer(config.autoprefixer),
+                perfectionist({colorCase:"upper"}),
             ], postcss_opts)
         ))
         .pipe(flatten())
@@ -242,7 +289,7 @@ gulp.task('images', () =>  {
  */
 import zip from 'gulp-zip'
 
-gulp.task('zip', () =>  {
+gulp.task('backup', () =>  {
     let date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/ /, '_').split(':').join('-')
     gulp.src(transformPath(PATH.backup.src, PATH.src))
     .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
@@ -284,4 +331,4 @@ gulp.task('server', ['watch', 'browsersync'])
 /**
  * BUILD
  **/
-gulp.task('build', ['css', 'js', 'images', 'copy', 'zip'])
+gulp.task('build', ['css', 'js', 'images', 'copy', 'backup'])

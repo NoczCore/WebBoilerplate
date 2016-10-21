@@ -1,0 +1,168 @@
+@mixin breakpoint($prefix) {
+    .visible-$(prefix) { display: block !important; }
+
+    table.visible-$(prefix) { display: table !important; }
+    tr.visible-$(prefix) { display: table-row !important; }
+    th.visible-$(prefix), td.visible-$(prefix) { display: table-cell !important; }
+
+    .visible-$(prefix)-block { display: block !important; }
+    .visible-$(prefix)-inline { display: inline !important; }
+    .visible-$(prefix)-inline-block { display: inline-block !important; }
+
+    .hidden-$(prefix) { display: none !important; }
+
+    @for $i from 1 to $cols {
+        .col-$(prefix)-$(i) {
+            width: calc($i / $cols * 100%);
+        }
+    }
+
+    @for $i from 0 to $cols {
+        .col-$(prefix)-pull-$(i) {
+            @if $i == 0 {
+                right: auto;
+            } @else {
+                right: calc($i / $cols * 100%);
+            }
+        }
+    }
+
+    @for $i from 0 to $cols { 
+        .col-$(prefix)-push-$(i) {
+            @if $i == 0 {
+                left: auto;
+            } @else {
+                left: calc($i / $cols * 100%);
+            }
+        }
+    }
+
+    @for $i from 0 to $cols {
+        .col-$(prefix)-offset-$(i) {
+            @if $i == 0 {
+                margin-left: 0%;
+            } @else {
+                margin-left: calc($i / $cols * 100%);
+            }
+        }
+    }
+
+}
+
+/**
+* GRID SYSTEM
+**/
+
+.container {
+    margin-right: auto;
+    padding-left: $gutter;
+    margin-left: auto;
+    padding-right: $gutter;
+
+    @each $bp, $width in ($breakpointWidth), ($breakpointContainer) {
+        @if $bp == 0 {
+            width: $width;
+        } @else {
+            @media (min-width: $bp) {
+                width: $width;
+            }
+        }
+    }
+}
+
+.container-fluid {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: $gutter;
+    padding-right: $gutter;
+}
+
+
+.row {
+    margin-left: -$gutter;
+    margin-right: -$gutter;
+}
+
+@each $prefix, $n in $breakpoint{
+    .visible-$(prefix), .visible-$(prefix)-block, .visible-$(prefix)-inline, .visible-$(prefix)-inline-block {
+        display: none !important;
+    }
+}
+
+
+.hide { display: none !important; }
+.show { display: block !important; }
+.invisible { visibility: hidden; }
+
+.hidden {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.text-hide {
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+}
+
+.col {
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-left: 0 $gutter;
+    padding-left: 0 $gutter;
+}
+
+@each $prefix, $width in ($breakpoint), ($breakpointWidth) {
+    @if $width == 0 {
+        @include breakpoint($(prefix));
+    } @else {
+        @media (min-width: $width) {
+            @include breakpoint($(prefix));
+        }
+    }
+}
+
+.visible-print, .visible-print-block, .visible-print-inline, .visible-print-inline-block { display: none !important; }
+
+@media print {
+    .visible-print { display: block !important; }
+    table.visible-print { display: table !important; }
+    tr.visible-print { display: table-row !important; }
+    th.visible-print, td.visible-print { display: table-cell !important; }
+
+    .visible-print-block { display: block !important; }
+    .visible-print-inline { display: inline !important; }
+    .visible-print-inline-block { display: inline-block !important; }
+
+    .hidden-print { display: none !important; }
+}
+
+.clearfix, .container, .container-fluid, .row {
+    zoom: 1;
+
+    &::after, &::before {
+        content: " ";
+        display: table;
+    }
+
+    &::after {
+        clear: both;
+    }
+}
+
+.center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pull-right { float: right !important; }
+.pull-left { float: left !important; }
+.affix { position: fixed; }
+
+@-ms-viewport {
+    width: device-width;
+}

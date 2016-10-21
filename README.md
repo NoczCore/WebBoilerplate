@@ -3,21 +3,15 @@
 My boilerplate to start a web project quickly.
 
 ##Features
-- CSS Compilation with [PostCSS](https://www.npmjs.com/package/gulp-babel) (Plugins: [autoprefixer](https://github
-.com/postcss/autoprefixer), [css-mqpacker](https://github.com/hail2u/node-css-mqpacker), [precss](https://github
-.com/jonathantneal/precss), [rucksack-css](https://github.com/simplaio/rucksack), [postcss-calc](https://github.com/postcss/postcss-calc), [stylelint](https://github
-.com/stylelint/stylelint) and [postcss-reporter](https://github.com/postcss/postcss-reporter),
-[postcss-sass-color-functions](https://www.npmjs.com/package/postcss-sass-color-functions)) and with [Compass]
-(http://compass-style.org/) if you want (However this is not recommended). Minify css with [gulp-cssnano](https://www.npmjs.com/package/gulp-cssnano)
+- CSS Compilation with [PostCSS](http://postcss.org/) or with [Compass](http://compass-style.org/) if you want (However this is not recommended).
 - ES6 (JavaScript) compilation with [Babel](https://www.npmjs.com/package/gulp-babel), [ES6-module-transpiler]
 (https://github.com/ryanseddon/gulp-es6-module-transpiler), [gulp-append-prepend](https://github.com/NoczCore/gulp-append-prepend) and [Uglify](https://www.npmjs
 .com/package/gulp-uglify)
-- Reducing images weight with [Imagemin](https://www.npmjs.com/package/gulp-imagemin) and [imagemin-pngquant](https://www.npmjs.com/package/imagemin-pngquant)
+- Reduces weight of images with [Imagemin](https://www.npmjs.com/package/gulp-imagemin) and [imagemin-pngquant](https://www.npmjs.com/package/imagemin-pngquant)
 - Copy files or dirs
-- Create ZIP backup width [gulp-zip](https://www.npmjs.com/package/gulp-zip)
+- Create ZIP backup
 - [BrowserSync](https://www.browsersync.io/docs/gulp) server
-- Build and watch task
-- Notifications with [gulp-notify](https://www.npmjs.com/package/gulp-notify)
+- Build and watch
 
 ##Installation
 
@@ -28,7 +22,7 @@ My boilerplate to start a web project quickly.
 
 ###Steps to install
 
-It is very simple to install. Just two steps and it works.
+It is very simple to install.
 
 - Clone this repository with ``git clone https://github.com/NoczCore/WebBoilerplate.git``
 - Go to the folder and run ``npm install``
@@ -36,54 +30,34 @@ It is very simple to install. Just two steps and it works.
 ##How to configure
 It's very easy !
 
-At first, open the config.js file.
+###Add CSS, JS, Image reducing or copy task
+You just have to add an object inside of ``config.paths.sources`` in config.js file
 
-###Options
-- ``config.paths.compiled.base`` The base of default destination of compiled files.
-- ``config.paths.compiled.css`` The default destination of css compilation
-- ``config.paths.compiled.js`` The default destination of javascript compilation
-- ``config.paths.compiled.images`` The default destination of reduced images
-- ``config.paths.src`` Source dir
-- ``config.paths.backup.src` Path of zip content
-- ``config.paths.backup.dest` Path of zip destination
-- ``config.paths.sources`` See explanation below
-- ``config.watcher.reloadWhenChange`` Reload the browser when files is updated
-- ``config.watcher.css`` The CSS files will be watched
-- ``config.watcher.js`` The Javascript files will be watched
-- ``config.watcher.images`` The images will be watched
-- ``config.browserSync`` [BrowserSync options](https://www.browsersync.io/docs/options)
-- ``config.autoprefixer`` [autoprefixer options](https://github.com/postcss/autoprefixer)
-- ``config.babel`` [Babel options](https://babeljs.io/docs/usage/options/)
-- ``config.es6transpiler`` [ES6-module-transpiler](https://github.com/ryanseddon/gulp-es6-module-transpiler)
-
-**When the path is absolute, the base is the main dir.**
-
-###Add CSS, JS, Image dir, or a copy
-You just have to add an object in CSS, JS, copy or images array in ``config.paths.sources``.
+**When the path is absolute, he is based in the main dir.**
 
 ####Examples:
 ```
 {
-  src: 'css/app.css', // The source file to be compiled, relative to config.paths.src or absolute to the main dir
-  (Required)
-  dest: 'css/', // The destination of compiled files, relative to config.paths.compiled.base (When is css, js or
-  images, is relative to default path for this type) or absolute to the main dir (Optional)
-  name: 'style', // The compiled filename, no contain extension (Optional)
-  prepend: ['js/jquery.js'], // File prepending the compilation file (Optional, only for JS)
-  append: ['js/myawesomefile.js'], // File appending the compilation file (Optional, only for JS)
-  compass: true // If you want use Compass (Optional, however this is not recommended, only for CSS)
+  src: 'js/app.js', // The file to be compiled, is relative to config.paths.src (Required)
+  dest: '', // Destination of compiled files, she is relative of default path for compiled files
+  name: 'bundle', // The compiled filename, no contain extension
+
+  prepend: ['js/jquery.js'], // File prepending the compilation file (only for JS)
+  append: ['js/myawesomefile.js'], // File appending the compilation file (only for JS)
+
+  compass: true // If you want use Compass (this is not recommended, only for CSS)
 }
 ```
 
 ###Tasks list
-- ``gulp css`` Compile your CSS files
-- ``gulp js`` Compile your javascript files
-- ``gulp images`` Reduces your images
+- ``gulp css`` Compile CSS files
+- ``gulp js`` Compile javascript files
+- ``gulp images`` Reduce images
 - ``gulp server`` Start [BrowserSync](https://www.browsersync.io/) and watch
 - ``gulp browsersync`` Start [BrowserSync](https://www.browsersync.io/)
-- ``gulp copy`` Copy your dirs or files
-- ``gulp zip`` Create backup zip
-- ``gulp build`` Execute zip, css, js, images
+- ``gulp copy`` Copy task
+- ``gulp backup`` Create backup
+- ``gulp build`` Execute all tasks
 
 ##TODO
 - Add sprite system
@@ -92,6 +66,3 @@ You just have to add an object in CSS, JS, copy or images array in ``config.path
 ##Licence
 This boilerplate is released under the [MIT licence](https://raw.githubusercontent
 .com/NoczCore/WebBoilerplate/master/LICENCE).
-
-##Disclaimer
-I am sorry for my poor English. Feel free to make changes in this README.
