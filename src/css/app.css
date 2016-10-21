@@ -3,11 +3,11 @@
 **/
 
 // GRID
-$cols: 13;
+$cols: 12;
 $gutter: 15px;
 $breakpoint: xs, sm, md, lg;
-$breakpointWidth: 0, 200px, 300px, 400px;
-$breakpointContainer: 80px, 160px, 240px, 320px;
+$breakpointWidth: 0, 768px, 992px, 1200px;
+$breakpointContainer: auto, 750px, 970px, 1170px;
 
 /**
 * VARIABLES
