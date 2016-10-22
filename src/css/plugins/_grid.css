@@ -111,8 +111,7 @@
     float: left;
     position: relative;
     min-height: 1px;
-    padding-left: 0 $gutter;
-    padding-left: 0 $gutter;
+    padding: 0 $gutter;
 }
 
 @each $prefix, $width in ($breakpoint), ($breakpointWidth) {
