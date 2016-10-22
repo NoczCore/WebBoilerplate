@@ -38,7 +38,6 @@
     "postcss-discard-comments": "^2.0.4",
     "postcss-discard-duplicates": "^2.0.1",
     "postcss-discard-empty": "^2.1.0",
-    "postcss-discard-unused": "^2.2.2",
     "postcss-each": "^0.9.3",
     "postcss-flexbox": "^1.0.2",
     "postcss-fontpath": "^0.3.0",

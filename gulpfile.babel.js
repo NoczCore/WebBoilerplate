@@ -99,7 +99,6 @@ import perfectionist from 'perfectionist'
 import comments from 'postcss-discard-comments'
 import duplicates from 'postcss-discard-duplicates'
 import empty from 'postcss-discard-empty'
-import unused from 'postcss-discard-unused'
 
 gulp.task('css', () => {
     rmDir(PATH.compiled.base + PATH.compiled.css)
@@ -152,7 +151,6 @@ gulp.task('css', () => {
                 mqMinMax(),
                 comments(),
                 empty(),
-                unused(),
                 duplicates(),
                 autoprefixer(config.autoprefixer),
                 perfectionist({colorCase:"upper"}),
