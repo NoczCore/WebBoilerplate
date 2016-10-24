@@ -29,6 +29,7 @@
     "gulp-postcss": "^6.1.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.4",
+    "gulp-watch": "^4.3.10",
     "gulp-zip": "^3.2.0",
     "imagemin-pngquant": "^5.0.0",
     "perfectionist": "^2.3.1",

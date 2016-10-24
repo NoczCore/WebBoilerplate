@@ -299,10 +299,18 @@ gulp.task('backup', () =>  {
 /**
  * WATCH
  */
+import watch from 'gulp-watch'
+
 gulp.task('watch' , () => {
-    gulp.watch(transformPath(config.watcher.css, PATH.src), ['css'])
-    gulp.watch(transformPath(config.watcher.js, PATH.src), ['js'])
-    gulp.watch(transformPath(config.watcher.images, PATH.src), ['images'])
+    watch(transformPath(config.watcher.css, PATH.src), () => {
+        gulp.start('css');
+    });
+    watch(transformPath(config.watcher.js, PATH.src), () => {
+        gulp.start('js');
+    });
+    watch(transformPath(config.watcher.images, PATH.src), () => {
+        gulp.start('images');
+    });
 })
 
 /**
