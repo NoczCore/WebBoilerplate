@@ -37,6 +37,10 @@ const config = {
                 }
             ],
             copy: [
+                {
+                    src: 'fonts/**/*',
+                    dest: 'fonts/'
+                }
             ],
             images: [
                 {

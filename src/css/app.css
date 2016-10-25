@@ -20,6 +20,7 @@ $breakpointContainer: auto, 750px, 970px, 1170px;
 **/
 @import "plugins/reset";
 @import "plugins/grid";
+@import "plugins/ionicons";
 
 /**
 * MODULES
